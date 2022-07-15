@@ -1,0 +1,13 @@
+---
+- name: Ensure YugabyteDB user group exists
+  ansible.builtin.group:
+    name: "{{ yugabytedb_group }}"
+    state: present
+
+- name: Ensure YugabyteDB user exists
+  ansible.builtin.user:
+    name: "{{ yugabytedb_user }}"
+    group: "{{ yugabytedb_group }}"
+    system: true
+    comment: "YugabyteDB user"
+    password_lock: true

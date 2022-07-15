@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: Florian Bobin
+  description: Ansible role to deploy and manage YugabyteDB database cluster(s) 
+  license: MIT
+  min_ansible_version: 5.0.0
+  platforms:
+    - name: Fedora
+      versions:
+        - '36'
+    - name: EL
+      versions:
+        - '8'
+  galaxy_tags: []
+dependencies: []

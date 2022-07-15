@@ -1,0 +1,67 @@
+---
+#------------------------------------------------------------------------------
+# GENERAL
+#------------------------------------------------------------------------------
+yugabytedb_version: "2.14.0.0-b94"
+
+yugabytedb_install_dir: "/usr/local/yugabytedb-{{ yugabytedb_version }}"
+yugabytedb_current_dir: "/usr/local/yugabytedb"
+yugabytedb_config_dir: "/etc/yugabyte"
+
+yugabytedb_user: yugabyte
+yugabytedb_group: yugabyte
+
+yugabytedb_roles: [ "master", "tserver" ]
+
+#------------------------------------------------------------------------------
+# GLOBAL
+#------------------------------------------------------------------------------
+
+# - Directories -
+yugabytedb_fs_data_dirs: [ "/var/lib/yugabyte" ]
+yugabytedb_fs_wal_dirs: "{{ yugabytedb_fs_data_dirs }}"
+yugabytedb_log_dir: "{{ yugabytedb_fs_data_dirs }}"
+yugabytedb_durable_wal_write_enabled: false
+
+# - Placement -
+yugabytedb_placement_enabled: false
+yugabytedb_placement_cloud: "cloud1"
+yugabytedb_placement_region: "datacenter1"
+yugabytedb_placement_zone: "rack1"
+
+# - Sharding -
+yugabytedb_replication_factor: 3
+
+# - YSQL -
+yugabytedb_ysql_enabled: true
+yugabytedb_ysql_num_shards_per_tserver: "-1"
+
+#------------------------------------------------------------------------------
+# MASTER
+#------------------------------------------------------------------------------
+yugabytedb_master_addrs: [ "127.0.0.1:7100" ]
+yugabytedb_master_rpc_bind_addresses: [ "0.0.0.0:7100" ]
+
+# - Web Interface -
+yugabytedb_master_webserver_interface: "0.0.0.0"
+yugabytedb_master_webserver_port: "7000"
+
+#------------------------------------------------------------------------------
+# TSERVER
+#------------------------------------------------------------------------------
+yugabytedb_tserver_master_addrs: [ "127.0.0.1:7100" ]
+yugabytedb_tserver_rpc_bind_addresses: [ "0.0.0.0:9100" ]
+
+# - Web Interface -
+yugabytedb_tserver_webserver_interface: "0.0.0.0"
+yugabytedb_tserver_webserver_port: "9000"
+
+# - YSQL  -
+yugabytedb_tserver_ysql_auth_enabled: false
+yugabytedb_tserver_ysql_proxy_bind_address: "0.0.0.0:5433"
+yugabytedb_tserver_ysql_hba_entries:
+  - 'host all all 0.0.0.0/0 trust'
+  - 'host all all ::0/0 trust'
+yugabytedb_tserver_ysql_max_connections: 300
+yugabytedb_tserver_ysql_log_statement: none
+yugabytedb_tserver_ysql_log_min_duration_statement: "-1"

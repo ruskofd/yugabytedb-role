@@ -4,7 +4,7 @@
 
 ### General informations
 
-This Ansible role is designed to deploy and manage YugabyteDB database clusters.
+This Ansible role is designed to deploy and manage YugabyteDB database cluster(s).
 
 **Table of Contents**
 
@@ -14,8 +14,7 @@ This Ansible role is designed to deploy and manage YugabyteDB database clusters.
 
 **Supported Platforms**
 
-  - Red Hat Enterprise Linux 8.x
-  - Ubuntu 22.04
+  - Fedora 36
 
 **References**
 
@@ -29,3 +28,33 @@ The role variables are available [HERE](docs/variables.md)
 
 You can find some configurations examples [HERE](docs/examples.md)
 
+### Install and use this role
+
+* Install the role using the command-line :
+
+  ```shell
+  $ ansible-galaxy role install git+https://github.com/ruskofd/yugabytedb-role.git
+  ```
+
+* Install the collection in your projects using a `requirements.yml` file and `ansible-galaxy` command-line :
+
+  ```YAML
+  $ cat requirements.yml
+  ---
+  roles:
+    - name: yugabytedb
+      src: https://github.com/ruskofd/yugabyte-role.git
+      scm: git
+      version: '1.0.0'
+
+  $ ansible-galaxy install-f -r requirements.yml
+  ```
+
+* Once the role is installed, you can use the roles in your playbooks :
+
+  ```yaml
+  - name: Install YugabyteDB cluser
+    hosts: yugabyte
+    roles:
+      - role: yugabytedb
+  ```

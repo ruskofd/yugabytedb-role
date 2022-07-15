@@ -1,0 +1,12 @@
+---
+- name: Pre-installation system tasks
+  import_tasks: system.yml
+
+- name: Install YugabyteDB server
+  import_tasks: install.yml
+
+- name: Manage YugabyteDB configuration
+  import_tasks: configure.yml
+
+- name: Manage YugabyteDB service
+  import_tasks: service.yml

@@ -1,0 +1,17 @@
+---
+- name: Ensure YugabyteDB service unit(s) exists
+  ansible.builtin.template:
+    src: "yb-{{ item }}.service.j2"
+    dest: "/etc/systemd/system/yb-{{ item }}.service"
+    owner: root
+    group: root
+    mode: '0644'
+  with_items: "{{ yugabytedb_roles }}"
+
+- name: Ensure YugabyteDB service(s) are started and enabled on boot
+  ansible.builtin.systemd:
+    name: "yb-{{ item }}.service"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  with_items: "{{ yugabytedb_roles }}"

@@ -1,0 +1,49 @@
+---
+- name: Check if YugabyteDB is already installed
+  ansible.builtin.stat:
+    path: "{{ yugabytedb_install_dir }}"
+  register: _yugabytedb_install_dir
+
+- name: Install YugabyteDB
+  block:
+    - name: Download YugabyteDB tarball
+      ansible.builtin.get_url:
+        url: "https://downloads.yugabyte.com/releases/{{ yugabytedb_version.split('-')[0] }}/yugabyte-{{ yugabytedb_version }}-linux-x86_64.tar.gz"
+        dest: "/tmp/yugabytedb-{{ yugabytedb_version }}.tar.gz"
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Ensure YugabyteDB installation directory exists
+      ansible.builtin.file:
+        path: "{{ yugabytedb_install_dir }}"
+        state: directory
+        owner: "{{ yugabytedb_user }}"
+        group: "{{ yugabytedb_group }}"
+        mode: '0755'
+
+    - name: Install YugabyteDB archive
+      ansible.builtin.unarchive:
+        src: "/tmp/yugabytedb-{{ yugabytedb_version }}.tar.gz"
+        dest: "{{ yugabytedb_install_dir }}"
+        remote_src: yes
+        extra_opts: [ '--strip-components=1' ]
+        owner: "{{ yugabytedb_user }}"
+        group: "{{ yugabytedb_group }}"
+
+    - name: Ensure symlink to current YugabyteDB installation exists
+      ansible.builtin.file:
+        src: "{{ yugabytedb_install_dir }}"
+        dest: "{{ yugabytedb_current_dir }}"
+        state: link
+        force: yes
+
+    - name: Run YugabyteDB post-installation script
+      ansible.builtin.command: "{{ yugabytedb_current_dir }}/bin/post_install.sh"
+
+    - name: Purge YugabyteDB tarball
+      ansible.builtin.file:
+        path: "/tmp/yugabytedb-{{ yugabytedb_version }}.tar.gz"
+        state: absent
+  when: not _yugabytedb_install_dir.stat.exists
+

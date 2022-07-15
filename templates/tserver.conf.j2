@@ -1,0 +1,29 @@
+# Managed by Ansible
+--tserver_master_addrs={{ yugabytedb_tserver_master_addrs | join(',') }}
+--rpc_bind_addresses={{ yugabytedb_tserver_rpc_bind_addresses | join(',') }}
+--fs_data_dirs={{ yugabytedb_fs_data_dirs | join(',') }}
+--fs_wal_dirs={{ yugabytedb_fs_wal_dirs | join(',') }}
+--webserver_interface={{ yugabytedb_tserver_webserver_interface }}
+--webserver_port={{ yugabytedb_tserver_webserver_port }}
+--log_dir={{ yugabytedb_log_dir | join(',') }}
+{% if yugabytedb_durable_wal_write_enabled %}
+--durable_wal_write
+{% endif %}
+--replication_factor={{ yugabytedb_replication_factor }}
+--ysql_num_shards_per_tserver={{ yugabytedb_ysql_num_shards_per_tserver }}
+{% if yugabytedb_placement_enabled %}
+--placement_cloud={{ yugabytedb_placement_cloud }}
+--placement_region={{ yugabytedb_placement_region }}
+--placement_zone={{ yugabytedb_placement_zone }}
+{% endif %}
+{% if yugabytedb_ysql_enabled %}
+--enable_ysql
+{% if yugabytedb_tserver_ysql_auth_enabled %}
+--ysql_enable_auth
+{% endif %}
+--pgsql_proxy_bind_address={{ yugabytedb_tserver_ysql_proxy_bind_address }}
+--ysql_hba_conf_csv={{ yugabytedb_tserver_ysql_hba_entries | join(',') }}
+--ysql_max_connections={{ yugabytedb_tserver_ysql_max_connections }}
+--ysql_log_statement={{ yugabytedb_tserver_ysql_log_statement }}
+{% endif %}
+

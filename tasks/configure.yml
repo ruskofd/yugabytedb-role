@@ -1,0 +1,29 @@
+---
+- name: Ensure required YugabyteDB directories exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ yugabytedb_user }}"
+    group: "{{ yugabytedb_group }}"
+    mode: '0750'
+  with_items:
+  - "{{ yugabytedb_fs_data_dirs }}"
+  - "{{ yugabytedb_fs_wal_dirs }}"
+  - "{{ yugabytedb_log_dir }}"
+
+- name: Ensure YugabyteDB configuration directory exists
+  ansible.builtin.file:
+    path: "{{ yugabytedb_config_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Ensure YugabyteDB configurations are applied
+  ansible.builtin.template:
+    src: "{{ item }}.conf.j2"
+    dest: "{{ yugabytedb_config_dir }}/{{ item }}.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  with_items: "{{ yugabytedb_roles }}"

@@ -1,0 +1,16 @@
+[Unit]
+Description=YugabyteDB Tablet server
+Documentation=https://docs.yugabyte.com/stable/
+After=network-online.target
+
+[Service]
+Type=simple
+User=yugabyte
+Group=yugabyte
+ExecStart={{ yugabytedb_current_dir }}/bin/yb-tserver --flagfile {{ yugabytedb_config_dir }}/tserver.conf
+TimeoutStartSec=30
+RestartSec=10
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
